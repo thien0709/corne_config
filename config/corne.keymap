@@ -1,146 +1,95 @@
 /*
- * Copyright (c) 2020 The ZMK Contributors
- *
- * SPDX-License-Identifier: MIT
+ * Corne Keyboard - ZMK Configuration
+ * 4 Layers: Base, Lower, Raise, Function
  */
 
-/*
- * Bao gồm các file định nghĩa cần thiết cho ZMK
- * - behaviors.dtsi: Định nghĩa các hành vi của phím (tap, hold, layer switch, v.v.).
- * - dt-bindings/zmk/keys.h: Định nghĩa các mã phím cơ bản (chữ cái, số, ký tự đặc biệt).
- * - dt-bindings/zmk/bt.h: Định nghĩa các phím liên quan đến Bluetooth (kết nối, profile).
- * - dt-bindings/zmk/outputs.h: Định nghĩa các phím liên quan đến output (USB/Bluetooth).
- * - dt-bindings/zmk/ext_power.h: Định nghĩa các phím liên quan đến nguồn mở rộng.
- * - dt-bindings/led/led.h: Định nghĩa liên quan đến LED.
- * - dt-bindings/zmk/backlight.h: Định nghĩa các phím điều khiển đèn nền.
- * - dt-bindings/zmk/rgb.h: Định nghĩa các phím điều khiển LED RGB.
- * - dt-bindings/zmk/reset.h: Định nghĩa các phím liên quan đến reset thiết bị.
- */
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
-#include <dt-bindings/zmk/outputs.h>
-#include <dt-bindings/zmk/ext_power.h>
-#include <dt-bindings/led/led.h>
-#include <dt-bindings/zmk/backlight.h>
 #include <dt-bindings/zmk/rgb.h>
-#include <dt-bindings/zmk/reset.h>
 
-/*
- * Cấu hình dải LED RGB Underglow
- * - chain-length = <27>: Tổng số LED trên mỗi bên là 27 (6 WS2812B + 21 SK6812 Mini-E).
- *   Tổng cộng cả bàn phím là 54 LED (27 mỗi bên).
- */
-&led_strip {
-    chain-length = <27>;
-};
-
-/*
- * Định nghĩa keymap cho bàn phím
- * - Keymap chứa các layer, mỗi layer ánh xạ phím vật lý đến hành động hoặc ký tự.
- * - Bàn phím có bố cục chia đôi (split) với 6 cột trái, 6 cột phải, và 4 hàng (bao gồm hàng phím chức năng).
- */
 / {
     keymap {
         compatible = "zmk,keymap";
 
-        /*
-         * Layer mặc định (BAS - QWERTY cơ bản)
-         * - Bố cục QWERTY chuẩn, dùng cho gõ văn bản thông thường.
-         * - Sơ đồ bàn phím (dựa trên 6+6 cột, 4 hàng):
-         *
-         *   Hàng 1:  TAB   Q   W   E   R   T  |  Y   U   I   O   P   BSPC
-         *   Hàng 2:  LSHFT A   S   D   F   G  |  H   J   K   L   ;   '
-         *   Hàng 3:  LCTRL Z   X   C   V   B  |  N   M   ,   .   /   ESC
-         *   Hàng 4:           LGUI MO1 SPACE | RET MO2 RALT
-         *
-         * - TAB, LSHFT, LCTRL, LGUI, SPACE, RET, RALT là các phím điều khiển.
-         * - MO1, MO2 là phím chuyển layer (momentary) sang layer LOW và RAI.
-         * - BSPC (Backspace), ESC, và các phím dấu câu được đặt ở vị trí quen thuộc.
-         */
+        // ===== LAYER 0: BASE (QWERTY) =====
         default_layer {
-            display-name = "BAS";
+            label = "BASE";
             bindings = <
-                &kp TAB    &kp Q  &kp W  &kp E     &kp R  &kp T        &kp Y    &kp U  &kp I      &kp O    &kp P     &kp BSPC
-                &kp LSHFT  &kp A  &kp S  &kp D     &kp F  &kp G        &kp H    &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
-                &kp LCTRL  &kp Z  &kp X  &kp C     &kp V  &kp B        &kp N    &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
-                                     &kp LGUI  &mo 1  &kp SPACE    &kp RET  &mo 2  &kp RALT
+   // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
+        &kp TAB       &kp Q         &kp W         &kp E         &kp R         &kp T             &kp Y         &kp U         &kp I         &kp O         &kp P         &kp BSPC
+   // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+        &kp LCTRL     &kp A         &kp S         &kp D         &kp F         &kp G             &kp H         &kp J         &kp K         &kp L         &kp SEMI      &kp SQT
+   // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+        &kp LSHFT     &kp Z         &kp X         &kp C         &kp V         &kp B             &kp N         &kp M         &kp COMMA     &kp DOT       &kp FSLH      &kp ESC
+   // ╰─────────────┴─────────────┴─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┴─────────────┴─────────────╯
+                                                   &kp LGUI      &mo 1         &kp SPACE         &kp RET       &mo 2         &mo 3
+   //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
             >;
         };
 
-        /*
-         * Layer số và điều hướng (LOW)
-         * - Layer này cung cấp số, phím điều hướng, và điều khiển Bluetooth/LED RGB.
-         * - Sơ đồ bàn phím:
-         *
-         *   Hàng 1:  TAB   1   2   3   4   5  |  6   7   8   9   0   BSPC
-         *   Hàng 2:  BT_CLR BT0 BT1 BT2 BT3 BT4 | LEFT DOWN UP RIGHT trans trans
-         *   Hàng 3:  LSHFT trans trans trans trans trans | trans BRI BRD EFF EFR
-         *   Hàng 4:           LGUI trans SPACE | RET trans RALT
-         *
-         * - BT_CLR: Xóa kết nối Bluetooth.
-         * - BT_SEL 0-4: Chọn profile Bluetooth (0 đến 4).
-         * - LEFT, DOWN, UP, RIGHT: Phím điều hướng.
-         * - RGB_BRI, RGB_BRD: Tăng/giảm độ sáng LED RGB.
-         * - RGB_EFF, RGB_EFR: Chuyển hiệu ứng RGB (tiếp theo/trước đó).
-         * - trans: Phím trong suốt, giữ hành vi từ layer thấp hơn (thường là BAS).
-         */
+        // ===== LAYER 1: LOWER (Numbers & Symbols) =====
         lower_layer {
-            display-name = "LOW";
+            label = "LOWER";
             bindings = <
-                &kp TAB     &kp N1        &kp N2        &kp N3        &kp N4        &kp N5          &kp N6    &kp N7    &kp N8    &kp N9     &kp N0    &kp BSPC
-                &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4    &kp LEFT  &kp DOWN  &kp UP    &kp RIGHT  &trans    &trans
-                &kp LSHFT   &trans        &trans        &trans        &trans        &trans          &trans    &rgb_ug RGB_BRI    &rgb_ug RGB_BRD    &rgb_ug RGB_EFF    &rgb_ug RGB_EFR
-                                            &kp LGUI      &trans        &kp SPACE       &kp RET   &trans    &kp RALT
+   // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
+        &kp TAB       &kp N1        &kp N2        &kp N3        &kp N4        &kp N5            &kp N6        &kp N7        &kp N8        &kp N9        &kp N0        &kp BSPC
+   // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+        &kp LCTRL     &kp EXCL      &kp AT        &kp HASH      &kp DLLR      &kp PRCNT         &kp CARET     &kp AMPS      &kp ASTRK     &kp LPAR      &kp RPAR      &kp PIPE
+   // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+        &kp LSHFT     &trans        &trans        &trans        &kp UNDER     &kp PLUS          &kp MINUS     &kp EQUAL     &kp LBKT      &kp RBKT      &kp BSLH      &kp GRAVE
+   // ╰─────────────┴─────────────┴─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┴─────────────┴─────────────╯
+                                                   &kp LGUI      &trans        &kp SPACE         &kp RET       &mo 3         &kp RALT
+   //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
             >;
         };
 
-        /*
-         * Layer ký tự đặc biệt (RAI)
-         * - Layer này cung cấp các ký tự đặc biệt và dấu câu, thường dùng trong lập trình.
-         * - Sơ đồ bàn phím:
-         *
-         *   Hàng 1:  TAB   !   @   #   $   %  |  ^   &   *   (   )   BSPC
-         *   Hàng 2:  LCTRL trans trans trans trans trans |  -   =   [   ]   \   `
-         *   Hàng 3:  LSHFT trans trans trans trans trans |  _   +   {   }   |   ~
-         *   Hàng 4:           LGUI trans SPACE | RET trans RALT
-         *
-         * - Các ký tự như !, @, #, $, % là các ký tự đặc biệt trên hàng số.
-         * - Các ký tự - , =, [, ], \, `, _, +, {, }, |, ~ hỗ trợ lập trình và gõ dấu câu.
-         * - trans: Phím trong suốt, giữ hành vi từ layer thấp hơn (thường là BAS).
-         */
+        // ===== LAYER 2: RAISE (Navigation & Arrow Keys) =====
         raise_layer {
-            display-name = "RAI";
+            label = "RAISE";
             bindings = <
-                &kp TAB    &kp EXCL  &kp AT  &kp HASH   &kp DLLR  &kp PRCNT    &kp CARET  &kp AMPS   &kp KP_MULTIPLY  &kp LPAR  &kp RPAR  &kp BSPC
-                &kp LCTRL  &trans    &trans  &trans     &trans    &trans       &kp MINUS  &kp EQUAL  &kp LBKT         &kp RBKT  &kp BSLH  &kp GRAVE
-                &kp LSHFT  &trans    &trans  &trans     &trans    &trans       &kp UNDER  &kp PLUS   &kp LBRC         &kp RBRC  &kp PIPE  &kp TILDE
-                                            &kp LGUI    &trans    &kp SPACE    &kp RET   &trans    &kp RALT
+   // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
+        &kp TAB       &trans        &trans        &trans        &trans        &trans            &kp INS       &kp HOME      &kp UP        &kp END       &kp PG_UP     &kp DEL
+   // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+        &kp LCTRL     &trans        &trans        &trans        &trans        &trans            &trans        &kp LEFT      &kp DOWN      &kp RIGHT     &kp PG_DN     &trans
+   // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+        &kp LSHFT     &trans        &trans        &trans        &trans        &trans            &trans        &trans        &trans        &trans        &trans        &trans
+   // ╰─────────────┴─────────────┴─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┴─────────────┴─────────────╯
+                                                   &kp LGUI      &mo 3         &kp SPACE         &kp RET       &trans        &kp RALT
+   //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
             >;
         };
 
-        /*
-         * Layer dự phòng 1 (chưa dùng)
-         * - Layer này được đánh dấu là "reserved" và chưa có ánh xạ phím.
-         */
-        extra_1 {
-            status = "reserved";
+        // ===== LAYER 3: ADJUST (System, BT, RGB, Media) =====
+        adjust_layer {
+            label = "ADJUST";
+            bindings = <
+   // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
+        &trans        &trans        &trans        &trans        &trans        &trans            &trans        &trans        &trans        &trans        &trans        &trans
+   // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+        &trans        &trans        &trans        &trans        &trans        &trans            &kp C_PREV    &kp C_VOL_DN  &kp C_VOL_UP  &kp C_NEXT    &kp C_PP      &kp C_MUTE
+   // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+        &trans        &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_CLR        &rgb_ug RGB_TOG &rgb_ug RGB_EFF &rgb_ug RGB_BRI &rgb_ug RGB_BRD &trans  &sys_reset
+   // ╰─────────────┴─────────────┴─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┴─────────────┴─────────────╯
+                                                   &trans        &trans        &trans            &trans        &trans        &mo 4
+   //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
+            >;
         };
 
-        /*
-         * Layer dự phòng 2 (chưa dùng)
-         * - Layer này được đánh dấu là "reserved" và chưa có ánh xạ phím.
-         */
-        extra_2 {
-            status = "reserved";
-        };
-
-        /*
-         * Layer dự phòng 3 (chưa dùng)
-         * - Layer này được đánh dấu là "reserved" và chưa có ánh xạ phím.
-         */
-        extra_3 {
-            status = "reserved";
+        // ===== LAYER 4: F-KEYS (Dedicated Function Keys Layer) =====
+        fkey_layer {
+            label = "F-KEYS";
+            bindings = <
+   // ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮   ╭─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────╮
+        &trans        &kp F1        &kp F2        &kp F3        &kp F4        &kp F5            &kp F6        &kp F7        &kp F8        &kp F9        &kp F10       &kp F11
+   // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+        &trans        &trans        &trans        &trans        &trans        &trans            &trans        &trans        &trans        &trans        &trans        &kp F12
+   // ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤
+        &trans        &trans        &trans        &trans        &trans        &trans            &trans        &trans        &trans        &trans        &trans        &trans
+   // ╰─────────────┴─────────────┴─────────────┼─────────────┼─────────────┼─────────────┤   ├─────────────┼─────────────┼─────────────┼─────────────┴─────────────┴─────────────╯
+                                                   &trans        &trans        &trans            &trans        &trans        &trans
+   //                                           ╰─────────────┴─────────────┴─────────────╯   ╰─────────────┴─────────────┴─────────────╯
+            >;
         };
     };
 };
