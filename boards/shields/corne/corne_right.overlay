@@ -10,24 +10,37 @@
         <&pro_micro 14 GPIO_ACTIVE_HIGH>;
 };
 
-&under {
-    compatible = "zmk,ws2812-strip";
-    label = "LED_STRIP";
-    gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>; // dùng đúng chân bạn đang hàn
-    chain-length = <54>;       // Tổng số LED trên cả 2 bên: 27 mỗi bên
-    split-index = <27>;        // LED bên trái = 27, bên phải cũng phải khai báo vậy để đồng bộ
-    color-order = <GRB>;       // Thử lại RGB nếu màu bị sai
+&spi1 {
     status = "okay";
-};
+    sck-pin = <(-1)>;
+    miso-pin = <(-1)>;
+    mosi-pin = <6>; // P0.06, nếu khác thì đổi số này
 
-/ {
-    chosen {
-        zmk,studio-rpc-uart = &uart0;
+    ws2812: ws2812@0 {
+        compatible = "worldsemi,ws2812-spi";
+        reg = <0>;
+        label = "WS2812_STRIP";
+        spi-max-frequency = <4000000>;
+        chain-length = <54>;      // Tổng LED
+        split-index = <27>;       // 27 bên trái, 27 bên phải
+        color-order = <GRB>;
+        status = "okay";
     };
 };
 
+&gpio1 {
+    status = "okay";
+};
 
-/ {
+&{
+    aliases {
+        led-strip = &ws2812;
+    };
+
+    chosen {
+        zmk,studio-rpc-uart = &uart0;
+    };
+
     ext_power {
         status = "disabled";
     };
