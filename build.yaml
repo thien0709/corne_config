@@ -1,5 +1,13 @@
+# build.yaml
 include:
+  # LEFT
   - board: nice_nano_v2
-    shield: corne_left nice_oled
+    shield: corne_left nice_view_adapter nice_view
+    cmake-args: -DCONFIG_ZMK_DISPLAY=y -DCONFIG_ZMK_RGB_UNDERGLOW=y
+    artifact-name: corne_left
+
+  # RIGHT
   - board: nice_nano_v2
-    shield: corne_right nice_oled
+    shield: corne_right nice_view_adapter nice_view
+    cmake-args: -DCONFIG_ZMK_DISPLAY=y -DCONFIG_ZMK_RGB_UNDERGLOW=y
+    artifact-name: corne_right
