@@ -6,11 +6,6 @@
 #include <dt-bindings/zmk/rgb.h>
 
  / {
-    /* ZMK tìm alias này để khởi tạo underglow */
-    aliases {
-        led-strip = &ws2812;
-    };
-
     keymap {
         compatible = "zmk,keymap";
 
