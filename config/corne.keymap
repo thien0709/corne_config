@@ -5,26 +5,6 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/rgb.h>
 
-/* ==== WS2812 underglow via SPI1 (data pin = P0.06) ====
- * Nếu data pin khác, đổi "mosi-pin = <6>;" theo:
- *  - P0.xx -> <xx>  (ví dụ P0.07 -> <7>)
- *  - P1.xx -> <32 + xx> (ví dụ P1.10 -> <42>)
- */
-&spi1 {
-    status = "okay";
-
-    /* Chỉ dùng MOSI làm DATA cho dải WS2812 */
-    mosi-pin = <6>;                 /* P0.06 */
-
-    ws2812: ws2812@0 {
-        compatible = "worldsemi,ws2812-spi";
-        reg = <0>;
-        spi-max-frequency = <4000000>;
-        status = "okay";
-        label = "WS2812_STRIP";
-    };
-};
-
  / {
     /* ZMK tìm alias này để khởi tạo underglow */
     aliases {
