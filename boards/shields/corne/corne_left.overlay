@@ -1,15 +1,19 @@
 #include "corne.dtsi"
 
-/* TẠO NODE LED MỚI */
 / {
+    /* Định nghĩa dải LED */
     under: led_strip {
         compatible = "zmk,ws2812-strip";
         label = "LED_STRIP";
-        /* Chân P1.05 (Pin 020 trên Pro Micro) cho Nice!Nano */
-        gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>; 
+        gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
         chain-length = <27>;
         color-order = <GRB>;
         status = "okay";
+    };
+
+    /* Đưa cấu hình chosen vào đây để fix lỗi undefined label */
+    chosen {
+        zmk,underglow = &under;
     };
 };
 

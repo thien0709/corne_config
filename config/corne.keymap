@@ -13,20 +13,12 @@
 #include <dt-bindings/zmk/rgb.h>
 #include <dt-bindings/zmk/reset.h>
 
-/* * SỬA LỖI LED:
- * Ánh xạ alias &led_strip thành &under để keymap hiểu.
- * Dựa trên file overlay của bạn thì node LED tên là "under".
+/* * LƯU Ý: Đã xóa đoạn "chosen" ở đây. 
+ * Cấu hình hardware phải nằm ở file .overlay
  */
-/ {
-    chosen {
-        zmk,underglow = &under;
-    };
-};
 
 / {
-    /* * CẤU HÌNH TRI-LAYER (QUAN TRỌNG): 
-     * Nhấn giữ cả phím MO(1) và MO(2) sẽ kích hoạt Layer 3 (ADJUST)
-     */
+    /* CẤU HÌNH TRI-LAYER: Nhấn Lower + Raise = Adjust */
     conditional_layers {
         compatible = "zmk,conditional-layers";
         tri_layer {
@@ -38,7 +30,7 @@
     keymap {
         compatible = "zmk,keymap";
 
-        /* Layer 0: BASE (QWERTY) */
+        /* Layer 0: BASE */
         default_layer {
             display-name = "BAS";
             bindings = <
@@ -49,7 +41,7 @@
             >;
         };
 
-        /* Layer 1: LOWER (Số & Điều hướng) */
+        /* Layer 1: NUM & NAV */
         lower_layer {
             display-name = "NUM";
             bindings = <
@@ -60,7 +52,7 @@
             >;
         };
 
-        /* Layer 2: RAISE (Ký tự đặc biệt) */
+        /* Layer 2: SYMBOL */
         raise_layer {
             display-name = "SYM";
             bindings = <
@@ -71,9 +63,7 @@
             >;
         };
 
-        /* Layer 3: ADJUST (F-Keys & System) 
-         * Tự động bật khi giữ cả Lower và Raise
-         */
+        /* Layer 3: ADJUST (F-Keys & System) */
         adjust_layer {
             display-name = "ADJ";
             bindings = <

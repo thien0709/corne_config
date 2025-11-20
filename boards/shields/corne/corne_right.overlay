@@ -9,6 +9,11 @@
         color-order = <GRB>;
         status = "okay";
     };
+
+    /* Fix lỗi undefined label */
+    chosen {
+        zmk,underglow = &under;
+    };
 };
 
 &kscan0 {
