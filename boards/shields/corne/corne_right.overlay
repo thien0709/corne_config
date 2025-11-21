@@ -1,21 +1,24 @@
 #include "corne.dtsi"
 
 / {
-    under: led_strip {
+    led_strip: led_strip {
         compatible = "zmk,ws2812-strip";
         label = "LED_STRIP";
-        gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+        gpios = <&pro_micro 6 GPIO_ACTIVE_HIGH>;
         chain-length = <27>;
         color-order = <GRB>;
         status = "okay";
     };
     
-    chosen {
-        zmk,underglow = &under;
+    /* QUAN TRỌNG: Báo cho firmware biết đây là bên phải (cột bắt đầu từ 6) */
+    default_transform: keymap_transform_0 {
+        col-offset = <6>;
     };
 };
 
 &kscan0 {
+    /* Với mạch Corne đảo chiều, thứ tự chân bên phải giống bên trái
+       nhưng cần col-offset ở trên để map đúng phím */
     col-gpios =
         <&pro_micro 21 GPIO_ACTIVE_HIGH>,
         <&pro_micro 20 GPIO_ACTIVE_HIGH>,
@@ -25,14 +28,12 @@
         <&pro_micro 14 GPIO_ACTIVE_HIGH>;
 };
 
-/ {
-    chosen {
-        zmk,studio-rpc-uart = &uart0;
-    };
+&pro_micro_i2c {
+    status = "okay";
 };
 
 / {
     ext_power {
-        status = "disabled";
+        status = "okay";
     };
 };

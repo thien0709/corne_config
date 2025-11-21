@@ -1,18 +1,14 @@
 #include "corne.dtsi"
 
 / {
-    /* Định nghĩa dải LED: 21 Phím + 6 Gầm = 27 */
-    under: led_strip {
+    led_strip: led_strip {
         compatible = "zmk,ws2812-strip";
         label = "LED_STRIP";
-        gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+        /* CHỈNH SỬA QUAN TRỌNG: Chân LED chuẩn Corne là D6 (Pro Micro 6) */
+        gpios = <&pro_micro 6 GPIO_ACTIVE_HIGH>; 
         chain-length = <27>;
         color-order = <GRB>;
         status = "okay";
-    };
-    
-    chosen {
-        zmk,underglow = &under;
     };
 };
 
@@ -26,14 +22,13 @@
         <&pro_micro 14 GPIO_ACTIVE_HIGH>;
 };
 
-/ {
-    chosen {
-        zmk,studio-rpc-uart = &uart0;
-    };
+/* QUAN TRỌNG: Bật nguồn cho màn hình và LED */
+&pro_micro_i2c {
+    status = "okay";
 };
 
 / {
     ext_power {
-        status = "disabled";
+        status = "okay";
     };
 };
