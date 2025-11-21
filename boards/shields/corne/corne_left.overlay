@@ -1,7 +1,7 @@
 #include "corne.dtsi"
 
 / {
-    /* Định nghĩa dải LED */
+    /* Định nghĩa dải LED: 21 Phím + 6 Gầm = 27 */
     under: led_strip {
         compatible = "zmk,ws2812-strip";
         label = "LED_STRIP";
@@ -10,8 +10,7 @@
         color-order = <GRB>;
         status = "okay";
     };
-
-    /* Đưa cấu hình chosen vào đây để fix lỗi undefined label */
+    
     chosen {
         zmk,underglow = &under;
     };

@@ -60,7 +60,6 @@
         };
 
         /* Layer 3: ADJUST (F-Keys & System & LED Control) */
-        /* Đã sửa lại layer này để thêm điều khiển màu LED và kết nối */
         adjust_layer {
             display-name = "ADJ";
             bindings = <
