@@ -5,7 +5,8 @@ include:
     shield: corne_right nice_oled
   - board: nice_nano_v2
     shield: corne_left nice_oled
-    cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DCONFIG_ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS=2
+    snippet: studio-rpc-usb-uart
+    cmake-args: -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DCONFIG_ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS=2 -DCONF_FILE=corne_dongle.conf
     artifact-name: corne_dongle
   - board: nice_nano_v2
     shield: settings_reset
