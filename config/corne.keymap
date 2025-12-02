@@ -11,122 +11,56 @@
 #include <dt-bindings/zmk/rgb.h>
 #include <dt-bindings/zmk/ext_power.h>
 
-
+/ {
   keymap {
     compatible = "zmk,keymap";
 
-        /*
-         * Default layer (BAS – basic QWERTY)
-         * - Standard QWERTY layout for general typing.
-         * - Physical layout (6+6 columns, 4 rows):
-         *
-         *   Row 1:  TAB   Q   W   E   R   T  |  Y   U   I   O   P   BSPC
-         *   Row 2:  LSHFT A   S   D   F   G  |  H   J   K   L   ;   '
-         *   Row 3:  LCTRL Z   X   C   V   B  |  N   M   ,   .   /   ESC
-         *   Row 4:           LGUI MO1 SPACE | RET MO2 MO3
-         *
-         * - TAB, LSHFT, LCTRL, LGUI, SPACE, RET are modifier/control keys.
-         * - MO1, MO2, MO3 are momentary layer keys for LOW, RAI, and FUN.
-         * - BSPC (Backspace), ESC, and punctuation keys are placed in familiar positions.
-         */
-        default_layer {
-            display-name = "BAS";
-            bindings = <
-                &kp TAB    &kp Q  &kp W  &kp E     &kp R  &kp T        &kp Y    &kp U  &kp I      &kp O    &kp P     &kp BSPC
-                &kp LSHFT  &kp A  &kp S  &kp D     &kp F  &kp G        &kp H    &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
-                &kp LCTRL  &kp Z  &kp X  &kp C     &kp V  &kp B        &kp N    &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
-                                     &kp LGUI  &mo 1  &kp SPACE    &kp RET  &mo 2  &mo 3
-            >;
-        };
-
-        /*
-         * Number and navigation layer (LOW)
-         * - Provides numbers, navigation keys, and Bluetooth/RGB controls.
-         * - Layout:
-         *
-         *   Row 1:  TAB   1   2   3   4   5  |  6   7   8   9   0   BSPC
-         *   Row 2:  BT_CLR BT0 BT1 BT2 BT3 BT4 | LEFT DOWN UP RIGHT trans trans
-         *   Row 3:  LSHFT trans trans trans trans trans | trans BRI BRD EFF EFR
-         *   Row 4:           LGUI trans SPACE | RET trans RALT
-         *
-         * - BT_CLR: Clear Bluetooth bonds.
-         * - BT_SEL 0–4: Select Bluetooth profile (0 to 4).
-         * - LEFT, DOWN, UP, RIGHT: Arrow/navigation keys.
-         * - RGB_BRI, RGB_BRD: Increase/decrease RGB brightness.
-         * - RGB_EFF, RGB_EFR: Cycle RGB effects (next/previous).
-         * - trans: Transparent key, inherits behavior from the lower layer (usually BAS).
-         */
-        lower_layer {
-            display-name = "LOW";
-            bindings = <
-                &kp TAB     &kp N1        &kp N2        &kp N3        &kp N4        &kp N5          &kp N6    &kp N7    &kp N8    &kp N9     &kp N0    &kp BSPC
-                &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4    &kp LEFT  &kp DOWN  &kp UP    &kp RIGHT  &trans    &trans
-                &kp LSHFT   &trans        &trans        &trans        &trans        &trans          &trans    &rgb_ug RGB_BRI    &rgb_ug RGB_BRD    &rgb_ug RGB_EFF    &rgb_ug RGB_EFR
-                                            &kp LGUI      &trans        &kp SPACE       &kp RET   &trans    &kp RALT
-            >;
-        };
-
-        /*
-         * Symbol layer (RAI)
-         * - Provides special characters and punctuation, commonly used in programming.
-         * - Layout:
-         *
-         *   Row 1:  TAB   !   @   #   $   %  |  ^   &   *   (   )   BSPC
-         *   Row 2:  LCTRL trans trans trans trans trans |  -   =   [   ]   \   `
-         *   Row 3:  LSHFT trans trans trans trans trans |  _   +   {   }   |   ~
-         *   Row 4:           LGUI trans SPACE | RET trans RALT
-         *
-         * - Characters like !, @, #, $, % are special symbols on the number row.
-         * - Characters -, =, [, ], \, `, _, +, {, }, |, ~ are useful for programming and punctuation.
-         * - trans: Transparent key, inherits behavior from the lower layer (usually BAS).
-         */
-        raise_layer {
-            display-name = "RAI";
-            bindings = <
-                &kp TAB    &kp EXCL  &kp AT  &kp HASH   &kp DLLR  &kp PRCNT    &kp CARET  &kp AMPS   &kp KP_MULTIPLY  &kp LPAR  &kp RPAR  &kp BSPC
-                &kp LCTRL  &trans    &trans  &trans     &trans    &trans       &kp MINUS  &kp EQUAL  &kp LBKT         &kp RBKT  &kp BSLH  &kp GRAVE
-                &kp LSHFT  &trans    &trans  &trans     &trans    &trans       &kp UNDER  &kp PLUS   &kp LBRC         &kp RBRC  &kp PIPE  &kp TILDE
-                                            &kp LGUI    &trans    &kp SPACE    &kp RET   &trans    &kp RALT
-            >;
-        };
-
-        /*
-         * Function key layer (FUN – F1 to F12)
-         * - This layer provides function keys F1–F12.
-         * - Layout:
-         *
-         *   Row 1:  trans F1  F2  F3  F4  F5  |  F6  F7  F8  F9  F10 trans
-         *   Row 2:  trans F11 F12 trans trans trans | trans trans trans trans trans trans
-         *   Row 3:  trans trans trans trans trans trans | trans trans trans trans trans trans
-         *   Row 4:           trans trans trans | trans trans trans
-         *
-         * - F1–F12: Function keys.
-         * - trans: Transparent key, inherits behavior from the lower layer.
-         */
-        extra_1 {
-            display-name = "FUN";
-            bindings = <
-                &trans  &kp F1   &kp F2   &kp F3  &kp F4  &kp F5     &kp F6  &kp F7  &kp F8  &kp F9  &kp F10  &trans
-                &trans  &kp F11  &kp F12  &trans  &trans  &trans     &trans  &trans  &trans  &trans  &trans   &trans
-                &trans  &trans   &trans   &trans  &trans  &trans     &trans  &trans  &trans  &trans  &trans   &trans
-                                          &trans  &trans  &trans     &trans  &trans  &trans
-            >;
-        };
-
-        /*
-         * Reserved layer 2 (not used yet)
-         * - This layer is marked as "reserved" and currently has no key mappings.
-         */
-        extra_2 {
-            status = "reserved";
-        };
-
-        /*
-         * Reserved layer 3 (not used yet)
-         * - This layer is marked as "reserved" and currently has no key mappings.
-         */
-        extra_3 {
-            status = "reserved";
-        };
+    default_layer {
+      display-name = "BAS";
+      bindings = <
+        &kp TAB    &kp Q  &kp W  &kp E     &kp R  &kp T        &kp Y    &kp U  &kp I      &kp O    &kp P     &kp BSPC
+        &kp LSHFT  &kp A  &kp S  &kp D     &kp F  &kp G        &kp H    &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
+        &kp LCTRL  &kp Z  &kp X  &kp C     &kp V  &kp B        &kp N    &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
+                              &kp LGUI  &mo 1  &kp SPACE    &kp RET  &mo 2  &mo 3
+      >;
     };
+
+    lower_layer {
+      display-name = "LOW";
+      bindings = <
+        &kp TAB     &kp N1        &kp N2        &kp N3        &kp N4        &kp N5          &kp N6    &kp N7    &kp N8    &kp N9     &kp N0    &kp BSPC
+        &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4    &kp LEFT  &kp DOWN  &kp UP    &kp RIGHT  &trans    &trans
+        &kp LSHFT   &trans        &trans        &trans        &trans        &trans          &trans    &rgb_ug RGB_BRI    &rgb_ug RGB_BRD    &rgb_ug RGB_EFF    &rgb_ug RGB_EFR    &trans
+                                      &kp LGUI      &trans        &kp SPACE       &kp RET   &trans    &kp RALT
+      >;
+    };
+
+    raise_layer {
+      display-name = "RAI";
+      bindings = <
+        &kp TAB    &kp EXCL  &kp AT  &kp HASH   &kp DLLR  &kp PRCNT    &kp CARET  &kp AMPS   &kp KP_MULTIPLY  &kp LPAR  &kp RPAR  &kp BSPC
+        &kp LCTRL  &trans    &trans  &trans     &trans    &trans       &kp MINUS  &kp EQUAL  &kp LBKT         &kp RBKT  &kp BSLH  &kp GRAVE
+        &kp LSHFT  &trans    &trans  &trans     &trans    &trans       &kp UNDER  &kp PLUS   &kp LBRC         &kp RBRC  &kp PIPE  &kp TILDE
+                                    &kp LGUI    &trans    &kp SPACE    &kp RET   &trans    &kp RALT
+      >;
+    };
+
+    extra_1 {
+      display-name = "FUN";
+      bindings = <
+        &trans  &kp F1   &kp F2   &kp F3  &kp F4  &kp F5     &kp F6  &kp F7  &kp F8  &kp F9  &kp F10  &trans
+        &trans  &kp F11  &kp F12  &trans  &trans  &trans     &trans  &trans  &trans  &trans  &trans   &trans
+        &trans  &trans   &trans   &trans  &trans  &trans     &trans  &trans  &trans  &trans  &trans   &trans
+                                  &trans  &trans  &trans     &trans  &trans  &trans
+      >;
+    };
+
+    extra_2 {
+      status = "reserved";
+    };
+
+    extra_3 {
+      status = "reserved";
+    };
+  };
 };
