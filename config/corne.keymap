@@ -142,44 +142,118 @@
   keymap {
     compatible = "zmk,keymap";
 
-    base {
-      label = "Base layer";
-      bindings = <
-&kp ESCAPE     &kp Q            &kp W            &kp E            &kp R              &kp T          &kp Y        &u_altgr            &kp I         &kp O             &kp P                     &kp LEFT_BRACKET
-&kp TAB        &hml LEFT_GUI A  &hml LEFT_ALT S  &hml LCTRL D     &hml LEFT_SHIFT F  &kp G          &kp H        &hmr RIGHT_SHIFT J  &hmr RCTRL K  &hmr RIGHT_ALT L  &hmr RIGHT_GUI SEMICOLON  &sqt_altgr
-&kp BACKSLASH  &kp Z            &kp X            &kp C            &kp V              &kp B          &kp N        &kp M               &kp COMMA     &kp DOT           &kp FSLH                  &rbkt_altgr
-                                                 &lt 1 BACKSPACE  &lt 3 SPACE        &lt 2 ENTER    &lt 2 ENTER  &lt 3 SPACE         &lt 1 DEL
-      >;
-    };
+        /*
+         * Layer mặc định (BAS - QWERTY cơ bản)
+         * - Bố cục QWERTY chuẩn, dùng cho gõ văn bản thông thường.
+         * - Sơ đồ bàn phím (dựa trên 6+6 cột, 4 hàng):
+         *
+         *   Hàng 1:  TAB   Q   W   E   R   T  |  Y   U   I   O   P   BSPC
+         *   Hàng 2:  LSHFT A   S   D   F   G  |  H   J   K   L   ;   '
+         *   Hàng 3:  LCTRL Z   X   C   V   B  |  N   M   ,   .   /   ESC
+         *   Hàng 4:           LGUI MO1 SPACE | RET MO2 MO3
+         *
+         * - TAB, LSHFT, LCTRL, LGUI, SPACE, RET là các phím điều khiển.
+         * - MO1, MO2, MO3 là phím chuyển layer sang LOW, RAI, và FUN.
+         * - BSPC (Backspace), ESC, và các phím dấu câu được đặt ở vị trí quen thuộc.
+         */
+        default_layer {
+            display-name = "BAS";
+            bindings = <
+                &kp TAB    &kp Q  &kp W  &kp E     &kp R  &kp T        &kp Y    &kp U  &kp I      &kp O    &kp P     &kp BSPC
+                &kp LSHFT  &kp A  &kp S  &kp D     &kp F  &kp G        &kp H    &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
+                &kp LCTRL  &kp Z  &kp X  &kp C     &kp V  &kp B        &kp N    &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
+                                     &kp LGUI  &mo 1  &kp SPACE    &kp RET  &mo 2  &mo 3
+            >;
+        };
 
-    nums {
-      label = "Numbers and symbols";
-      bindings = <
-&kp GRAVE  &kp F2        &kp F3  &kp F4    &kp F5      &kp F6         &kp F7     &kp F8         &kp F9        &kp F10               &kp F11                &kp TILDE
-&kp PLUS   &kp EXCL      &kp AT  &kp HASH  &kp DOLLAR  &kp PERCENT    &kp CARET  &kp AMPERSAND  &kp ASTERISK  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &kp UNDER
-&kp EQUAL  &kp NUMBER_1  &kp N2  &kp N3    &kp N4      &kp N5         &kp N6     &kp N7         &kp N8        &kp N9                &kp N0                 &kp MINUS
-                                 &trans    &trans      &trans         &trans     &trans         &trans
-      >;
-    };
+        /*
+         * Layer số và điều hướng (LOW)
+         * - Layer này cung cấp số, phím điều hướng, và điều khiển Bluetooth/LED RGB.
+         * - Sơ đồ bàn phím:
+         *
+         *   Hàng 1:  TAB   1   2   3   4   5  |  6   7   8   9   0   BSPC
+         *   Hàng 2:  BT_CLR BT0 BT1 BT2 BT3 BT4 | LEFT DOWN UP RIGHT trans trans
+         *   Hàng 3:  LSHFT trans trans trans trans trans | trans BRI BRD EFF EFR
+         *   Hàng 4:           LGUI trans SPACE | RET trans RALT
+         *
+         * - BT_CLR: Xóa kết nối Bluetooth.
+         * - BT_SEL 0-4: Chọn profile Bluetooth (0 đến 4).
+         * - LEFT, DOWN, UP, RIGHT: Phím điều hướng.
+         * - RGB_BRI, RGB_BRD: Tăng/giảm độ sáng LED RGB.
+         * - RGB_EFF, RGB_EFR: Chuyển hiệu ứng RGB (tiếp theo/trước đó).
+         * - trans: Phím trong suốt, giữ hành vi từ layer thấp hơn (thường là BAS).
+         */
+        lower_layer {
+            display-name = "LOW";
+            bindings = <
+                &kp TAB     &kp N1        &kp N2        &kp N3        &kp N4        &kp N5          &kp N6    &kp N7    &kp N8    &kp N9     &kp N0    &kp BSPC
+                &bt BT_CLR  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4    &kp LEFT  &kp DOWN  &kp UP    &kp RIGHT  &trans    &trans
+                &kp LSHFT   &trans        &trans        &trans        &trans        &trans          &trans    &rgb_ug RGB_BRI    &rgb_ug RGB_BRD    &rgb_ug RGB_EFF    &rgb_ug RGB_EFR
+                                            &kp LGUI      &trans        &kp SPACE       &kp RET   &trans    &kp RALT
+            >;
+        };
 
-    navi {
-      label = "Navigation";
-      bindings = <
-&kp LCMD      &none   &none   &none   &none   &none     &kp HOME      &kp PG_DN        &kp PG_UP           &kp END              &none  &kp RIGHT_GUI
-&kp LCTRL     &trans  &trans  &trans  &trans  &none     &kp LEFT      &kp DOWN         &kp UP              &kp RIGHT            &none  &kp RCTRL
-&kp LEFT_ALT  &none   &none   &none   &none   &none     &kp RA(LEFT)  &kp PRINTSCREEN  &kp LG(LC(LS(N4)))  &kp RA(RIGHT_ARROW)  &none  &kp RALT
-                              &trans  &trans  &trans    &trans        &trans           &trans
-      >;
-    };
+        /*
+         * Layer ký tự đặc biệt (RAI)
+         * - Layer này cung cấp các ký tự đặc biệt và dấu câu, thường dùng trong lập trình.
+         * - Sơ đồ bàn phím:
+         *
+         *   Hàng 1:  TAB   !   @   #   $   %  |  ^   &   *   (   )   BSPC
+         *   Hàng 2:  LCTRL trans trans trans trans trans |  -   =   [   ]   \   `
+         *   Hàng 3:  LSHFT trans trans trans trans trans |  _   +   {   }   |   ~
+         *   Hàng 4:           LGUI trans SPACE | RET trans RALT
+         *
+         * - Các ký tự như !, @, #, $, % là các ký tự đặc biệt trên hàng số.
+         * - Các ký tự - , =, [, ], \, `, _, +, {, }, |, ~ hỗ trợ lập trình và gõ dấu câu.
+         * - trans: Phím trong suốt, giữ hành vi từ layer thấp hơn (thường là BAS).
+         */
+        raise_layer {
+            display-name = "RAI";
+            bindings = <
+                &kp TAB    &kp EXCL  &kp AT  &kp HASH   &kp DLLR  &kp PRCNT    &kp CARET  &kp AMPS   &kp KP_MULTIPLY  &kp LPAR  &kp RPAR  &kp BSPC
+                &kp LCTRL  &trans    &trans  &trans     &trans    &trans       &kp MINUS  &kp EQUAL  &kp LBKT         &kp RBKT  &kp BSLH  &kp GRAVE
+                &kp LSHFT  &trans    &trans  &trans     &trans    &trans       &kp UNDER  &kp PLUS   &kp LBRC         &kp RBRC  &kp PIPE  &kp TILDE
+                                            &kp LGUI    &trans    &kp SPACE    &kp RET   &trans    &kp RALT
+            >;
+        };
 
-    bt_media {
-      label = "BT and Media";
-      bindings = <
-&out OUT_TOG  &bt BT_SEL 0      &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &kp C_MUTE           &kp C_PREVIOUS    &rgb_ug RGB_TOG  &rgb_ug RGB_EFF  &rgb_ug RGB_BRI  &rgb_ug RGB_BRD  &out OUT_TOG
-&bt BT_CLR    &ext_power EP_TOG &none         &none         &none         &kp C_VOLUME_UP      &kp C_PLAY_PAUSE  &rgb_ug RGB_HUI  &rgb_ug RGB_SAI  &rgb_ug RGB_SPI  &none            &none
-&none         &none             &none         &none         &none         &kp C_VOLUME_DOWN    &kp C_NEXT        &rgb_ug RGB_HUD  &rgb_ug RGB_SAD  &rgb_ug RGB_SPD  &none            &bootloader
-                                              &trans        &trans        &trans               &trans            &trans           &trans
-      >;
+        /*
+         * Layer phím chức năng (FUN - F1 đến F12)
+         * - Layer này cung cấp các phím chức năng F1-F12.
+         * - Sơ đồ bàn phím:
+         *
+         *   Hàng 1:  trans F1  F2  F3  F4  F5  |  F6  F7  F8  F9  F10 trans
+         *   Hàng 2:  trans F11 F12 trans trans trans | trans trans trans trans trans trans
+         *   Hàng 3:  trans trans trans trans trans trans | trans trans trans trans trans trans
+         *   Hàng 4:           trans trans trans | trans trans trans
+         *
+         * - F1-F12: Các phím chức năng.
+         * - trans: Phím trong suốt, giữ hành vi từ layer thấp hơn.
+         */
+        extra_1 {
+            display-name = "FUN";
+            bindings = <
+                &trans  &kp F1   &kp F2   &kp F3  &kp F4  &kp F5     &kp F6  &kp F7  &kp F8  &kp F9  &kp F10  &trans
+                &trans  &kp F11  &kp F12  &trans  &trans  &trans     &trans  &trans  &trans  &trans  &trans   &trans
+                &trans  &trans   &trans   &trans  &trans  &trans     &trans  &trans  &trans  &trans  &trans   &trans
+                                          &trans  &trans  &trans     &trans  &trans  &trans
+            >;
+        };
+
+        /*
+         * Layer dự phòng 2 (chưa dùng)
+         * - Layer này được đánh dấu là "reserved" và chưa có ánh xạ phím.
+         */
+        extra_2 {
+            status = "reserved";
+        };
+
+        /*
+         * Layer dự phòng 3 (chưa dùng)
+         * - Layer này được đánh dấu là "reserved" và chưa có ánh xạ phím.
+         */
+        extra_3 {
+            status = "reserved";
+        };
     };
-  };
 };
