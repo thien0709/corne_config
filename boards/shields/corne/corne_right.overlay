@@ -13,17 +13,15 @@
 &under {
     compatible = "zmk,ws2812-strip";
     label = "LED_STRIP";
-    // SỬA: Chân D1 của Nice!Nano v2 là P0.06
+
     gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
     
-    // SỬA: Mỗi bên có 27 LED thực tế
     chain-length = <27>;
     
     color-order = <GRB>;
     status = "okay";
 };
 
-// SỬA: Bật nguồn ngoài
 &ext_power {
     status = "okay";
 };
