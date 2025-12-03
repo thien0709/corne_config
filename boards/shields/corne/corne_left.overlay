@@ -1,7 +1,18 @@
 #include "corne.dtsi"
 #include <dt-bindings/led/led.h>
 
-// 1. Cấu hình chân P0.06 (D1) làm chân phát dữ liệu cho LED (MOSI)
+// --- PHẦN 1: KHÔI PHỤC QUÉT PHÍM (Đã bị thiếu) ---
+&kscan0 {
+    col-gpios =
+        <&pro_micro 21 GPIO_ACTIVE_HIGH>,
+        <&pro_micro 20 GPIO_ACTIVE_HIGH>,
+        <&pro_micro 19 GPIO_ACTIVE_HIGH>,
+        <&pro_micro 18 GPIO_ACTIVE_HIGH>,
+        <&pro_micro 15 GPIO_ACTIVE_HIGH>,
+        <&pro_micro 14 GPIO_ACTIVE_HIGH>;
+};
+
+// --- PHẦN 2: SỬA LỖI LED (Dùng SPI P0.06) ---
 &pinctrl {
     spi3_default: spi3_default {
         group1 {
@@ -17,7 +28,6 @@
     };
 };
 
-// 2. Khởi tạo driver WS2812 qua giao thức SPI
 &spi3 {
     compatible = "nordic,nrf-spim";
     status = "okay";
@@ -28,31 +38,24 @@
     led_strip: ws2812@0 {
         compatible = "worldsemi,ws2812-spi";
         label = "LED_STRIP";
-        
-        /* Cần thiết cho driver SPI, không sửa */
         reg = <0>; 
         spi-max-frequency = <4000000>;
-
-        /* Số lượng LED mỗi bên: 27 */
-        chain-length = <27>; 
         
-        /* Timing chuẩn cho WS2812 */
+        chain-length = <27>; /* 27 LED mỗi bên */
         spi-one-frame = <0x70>;
         spi-zero-frame = <0x40>;
-        
-        /* Thứ tự màu, nếu sai màu thì đổi vị trí RED/GREEN/BLUE ở đây */
         color-mapping = <LED_COLOR_ID_GREEN LED_COLOR_ID_RED LED_COLOR_ID_BLUE>;
     };
 };
 
-// 3. Khai báo cho ZMK biết đây là dải LED chính
+// --- PHẦN 3: CẤU HÌNH OLED VÀ NGUỒN ---
 / {
     chosen {
         zmk,underglow = &led_strip;
+        zephyr,display = &oled; // Đảm bảo chọn đúng màn hình OLED
     };
 };
 
-// 4. QUAN TRỌNG: Bật nguồn 3.3V cấp cho LED (nếu không có dòng này LED sẽ tắt)
 &ext_power {
     status = "okay";
 };
