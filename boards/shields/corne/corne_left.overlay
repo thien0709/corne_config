@@ -37,17 +37,35 @@
 
     led_strip: ws2812@0 {
         compatible = "worldsemi,ws2812-spi";
-        label = "LED_STRIP";
+        label = "WS2812";
         
         reg = <0>; 
         spi-max-frequency = <4000000>;
 
-        chain-length = <27>; /* 27 LED mỗi bên */
+        chain-length = <27>; /* 21 per-key + 6 underglow */
         spi-one-frame = <0x70>;
         spi-zero-frame = <0x40>;
         
-        /* Thứ tự màu (Thử đổi nếu bị sai màu) */
         color-mapping = <LED_COLOR_ID_GREEN LED_COLOR_ID_RED LED_COLOR_ID_BLUE>;
+    };
+};
+
+&i2c0 {
+    status = "okay";
+    
+    oled: ssd1306@3c {
+        compatible = "solomon,ssd1306fb";
+        reg = <0x3c>;
+        width = <128>;
+        height = <32>;
+        segment-offset = <0>;
+        page-offset = <0>;
+        display-offset = <0>;
+        multiplex-ratio = <31>;
+        segment-remap;
+        com-invdir;
+        com-sequential;
+        prechargep = <0x22>;
     };
 };
 
