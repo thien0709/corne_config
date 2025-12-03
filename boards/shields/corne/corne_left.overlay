@@ -1,7 +1,5 @@
 #include "corne.dtsi"
-#include <dt-bindings/led/led.h>
 
-// --- PHẦN 1: KHÔI PHỤC QUÉT PHÍM (Đã bị thiếu) ---
 &kscan0 {
     col-gpios =
         <&pro_micro 21 GPIO_ACTIVE_HIGH>,
@@ -12,50 +10,25 @@
         <&pro_micro 14 GPIO_ACTIVE_HIGH>;
 };
 
-// --- PHẦN 2: SỬA LỖI LED (Dùng SPI P0.06) ---
-&pinctrl {
-    spi3_default: spi3_default {
-        group1 {
-            psels = <NRF_PSEL(SPIM_MOSI, 0, 6)>; // P0.06 = D1
-        };
-    };
-
-    spi3_sleep: spi3_sleep {
-        group1 {
-            psels = <NRF_PSEL(SPIM_MOSI, 0, 6)>;
-            low-power-enable;
-        };
-    };
-};
-
-&spi3 {
-    compatible = "nordic,nrf-spim";
+&under {
+    compatible = "zmk,ws2812-strip";
+    label = "LED_STRIP";
+    gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>; 
+    chain-length = <54>;      
+    split-index = <27>;       
+    color-order = <RGB>;       
     status = "okay";
-    pinctrl-0 = <&spi3_default>;
-    pinctrl-1 = <&spi3_sleep>;
-    pinctrl-names = "default", "sleep";
-
-    led_strip: ws2812@0 {
-        compatible = "worldsemi,ws2812-spi";
-        label = "LED_STRIP";
-        reg = <0>; 
-        spi-max-frequency = <4000000>;
-        
-        chain-length = <27>; /* 27 LED mỗi bên */
-        spi-one-frame = <0x70>;
-        spi-zero-frame = <0x40>;
-        color-mapping = <LED_COLOR_ID_GREEN LED_COLOR_ID_RED LED_COLOR_ID_BLUE>;
-    };
 };
 
-// --- PHẦN 3: CẤU HÌNH OLED VÀ NGUỒN ---
 / {
     chosen {
-        zmk,underglow = &led_strip;
-        zephyr,display = &oled; // Đảm bảo chọn đúng màn hình OLED
+        zmk,studio-rpc-uart = &uart0;
     };
 };
 
-&ext_power {
-    status = "okay";
+
+/ {
+    ext_power {
+        status = "okay";
+    };
 };
