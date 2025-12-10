@@ -1,31 +1,5 @@
 include:
-  # --- BÀN PHÍM TRÁI ---
   - board: nice_nano_v2
     shield: corne_left nice_oled
-    # Thêm thời gian ngủ (30 phút) cho phím trái ở đây
-    cmake-args: -DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=1800000
-    
-  # --- BÀN PHÍM PHẢI ---
   - board: nice_nano_v2
     shield: corne_right nice_oled
-    # Thêm thời gian ngủ (30 phút) cho phím phải ở đây
-    cmake-args: -DCONFIG_ZMK_IDLE_SLEEP_TIMEOUT=1800000
-
-  # --- CẤU HÌNH DONGLE ---
-  - board: nice_nano_v2
-    shield: corne_left nice_oled
-    snippet: studio-rpc-usb-uart
-    artifact-name: corne_dongle
-    # Cấu hình Dongle (Không có Timeout, sửa lỗi ngoặc kép tên niis)
-    cmake-args: >
-      -DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y 
-      -DCONFIG_ZMK_SPLIT_BLE_CENTRAL_PERIPHERALS=2 
-      -DCONFIG_ZMK_SLEEP=n 
-      -DCONFIG_BT_CTLR_TX_PWR_PLUS_8=y 
-      -DCONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_PROXY=y 
-      -DCONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING=y
-      -DCONFIG_ZMK_BLE_PASSKEY_ENTRY=n
-      -DCONFIG_ZMK_KEYBOARD_NAME=\"niis\"
-      
-  - board: nice_nano_v2
-    shield: settings_reset

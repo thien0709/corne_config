@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2020 The ZMK Contributors
- * SPDX-License-Identifier: MIT
- */
-
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
@@ -13,61 +8,119 @@
 #include <dt-bindings/zmk/rgb.h>
 #include <dt-bindings/zmk/reset.h>
 
+
+#define DEFAULT 0
+#define LOWER   1
+#define RAISE   2
+#define ADJUST  3
+
+/*
+ * Cấu hình dải LED RGB Underglow
+ * - chain-length = <27>: Tổng số LED trên mỗi bên là 27 (6 WS2812B + 21 SK6812 Mini-E).
+ *   Tổng cộng cả bàn phím là 54 LED (27 mỗi bên).
+ */
+&led_strip {
+    chain-length = <27>;
+};
+
 / {
-    /* CẤU HÌNH TRI-LAYER: Nhấn Lower + Raise = Adjust */
+    /* TẠO LOGIC NHẤN CẢ 2 LAYER ĐỂ RA LAYER 3 */
     conditional_layers {
         compatible = "zmk,conditional-layers";
         tri_layer {
-            if-layers = <1 2>;
-            then-layer = <3>;
+            if-layers = <LOWER RAISE>;
+            then-layer = <ADJUST>;
+        };
+    };
+
+    /* TÙY CHỈNH HÀNH VI PHÍM (BEHAVIORS) */
+    behaviors {
+        /*
+         * td_caps: Tap Dance
+         * - Gõ 1 cái: Shift trái (dùng viết hoa nhanh)
+         * - Gõ 2 cái: Caps Lock (khóa viết hoa)
+         */
+        td_caps: tap_dance_caps {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp LSHFT>, <&kp CAPS>;
+        };
+
+        /*
+         * mt_ctrl_esc: Mod-Tap (Dành cho Vim)
+         * - Gõ nhẹ (Tap): ESC (Thoát Vim Mode)
+         * - Giữ (Hold): CTRL (Dùng tổ hợp phím)
+         * Đặt ở vị trí trái chữ A (Capslock cũ) là chuẩn bài nhất.
+         */
+        mt_ctrl_esc: mt_ctrl_esc {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <150>;
+            bindings = <&kp>, <&kp>;
         };
     };
 
     keymap {
         compatible = "zmk,keymap";
 
-        /* Layer 0: BASE */
+        /* * LAYER 0: DEFAULT (QWERTY) 
+         * - Trái A: Shift trái (hoặc Capslock nếu gõ 2 lần)
+         * - Trái Z: Là phím đa năng ESC/CTRL (Code Vim cực sướng)
+         * - Ngón cái trái: GUI (Windows/Super) cho BSPWM
+         */
         default_layer {
-            display-name = "BAS";
+            display-name = "CODE_VIM";
             bindings = <
-                &kp TAB   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
-                &kp LSHFT &kp A &kp S &kp D &kp F &kp G   &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
-                &kp LCTRL &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp ESC
-                                &kp LGUI &mo 1 &kp SPACE  &kp RET &mo 2 &kp RALT
+&kp TAB       &kp Q  &kp W  &kp E  &kp R  &kp T     &kp Y  &kp U  &kp I      &kp O    &kp P     &kp BSPC
+&kp LSHFT &kp A  &kp S  &kp D  &kp F  &kp G     &kp H  &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
+&mt_ctrl_esc LCTRL ESC   &kp Z  &kp X  &kp C  &kp V  &kp B     &kp N  &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
+                     &kp LGUI &mo LOWER &kp SPACE   &kp RET &mo RAISE &kp RALT
             >;
         };
 
-        /* Layer 1: NUM & NAV */
+        /* * LAYER 1: LOWER (NAVIGATION & NUMBER)
+         * - Tay phải: HJKL biến thành Mũi tên (Vim Motion)
+         * - Tay trái: Hàng số 1-5
+         * - Hàng dưới: Các lệnh thao tác text
+         */
         lower_layer {
-            display-name = "NUM";
+            display-name = "NAV_NUM";
             bindings = <
-                &kp TAB    &kp N1       &kp N2       &kp N3       &kp N4       &kp N5         &kp N6   &kp N7   &kp N8   &kp N9    &kp N0    &kp BSPC
-                &trans     &trans       &trans       &trans       &trans       &trans         &kp LEFT &kp DOWN &kp UP   &kp RIGHT &trans    &trans
-                &kp LSHFT  &trans       &trans       &trans       &trans       &trans         &trans   &trans   &trans   &trans    &trans    &trans
-                                                     &kp LGUI     &trans       &kp SPACE      &kp RET  &trans   &kp RALT
+&trans  &kp N1     &kp N2     &kp N3     &kp N4     &kp N5       &kp N6    &kp N7    &kp N8    &kp N9     &kp N0    &kp DEL
+&trans  &trans     &trans     &trans     &trans     &trans       &kp LEFT  &kp DOWN  &kp UP    &kp RIGHT  &trans    &kp PG_UP
+&trans  &kp LG(Z)  &kp LG(X)  &kp LG(C)  &kp LG(V)  &trans       &kp HOME  &kp END   &trans    &trans     &trans    &kp PG_DN
+                   &trans     &trans     &trans       &trans    &trans    &trans
             >;
         };
 
-        /* Layer 2: SYMBOL */
+        /* * LAYER 2: RAISE (SYMBOLS FOR CODING)
+         * - Tối ưu cho Coder: Ngoặc (), [], {} nằm cạnh nhau dễ nhớ
+         * - Các dấu toán học - = + _ nằm bên phải
+         */
         raise_layer {
-            display-name = "SYM";
+            display-name = "SYMBOL";
             bindings = <
-                &kp TAB   &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS  &kp KP_MULTIPLY &kp LPAR &kp RPAR &kp BSPC
-                &kp LCTRL &trans   &trans &trans   &trans   &trans      &kp MINUS &kp EQUAL &kp LBKT        &kp RBKT &kp BSLH &kp GRAVE
-                &kp LSHFT &trans   &trans &trans   &trans   &trans      &kp UNDER &kp PLUS  &kp LBRC        &kp RBRC &kp PIPE &kp TILDE
-                                   &kp LGUI &trans   &kp SPACE    &kp RET   &trans    &kp RALT
+&kp GRAVE &kp EXCL  &kp AT    &kp HASH  &kp DLLR  &kp PRCNT    &kp CARET &kp AMPS  &kp STAR  &kp LPAR  &kp RPAR  &kp BSPC
+&trans    &trans    &trans    &trans    &trans    &trans       &kp MINUS &kp EQUAL &kp LBKT  &kp RBKT  &kp BSLH  &kp PIPE
+&trans    &trans    &trans    &trans    &trans    &trans       &kp UNDER &kp PLUS  &kp LBRC  &kp RBRC  &kp TILDE &trans
+                    &trans    &trans    &trans       &trans    &trans    &trans
             >;
         };
 
-       /* Layer 3: ADJUST */
+        /* * LAYER 3: ADJUST (SYSTEM)
+         * - Giữ cả LOWER + RAISE để vào
+         * - Chỉnh Bluetooth, F-Keys
+         */
         adjust_layer {
-            display-name = "ADJ";
+            display-name = "SYSTEM";
             bindings = <
-                &kp F1        &kp F2           &kp F3           &kp F4           &kp F5           &kp F6             &kp F7           &kp F8   &kp F9   &kp F10  &kp F11  &kp F12
-                &bt BT_CLR    &bt BT_SEL 0     &bt BT_SEL 1     &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4       &out OUT_TOG     &trans   &trans   &trans   &trans   &trans
-                /* Thêm nút EP_ON ở đầu dòng dưới để kích nguồn nếu lỡ bị tắt */
-                &ext_power EP_ON &rgb_ug RGB_TOG &rgb_ug RGB_EFF &rgb_ug RGB_HUI &rgb_ug RGB_SAI  &rgb_ug RGB_BRI  &trans           &trans   &trans   &trans   &trans   &sys_reset
-                                               &trans           &trans           &trans           &trans             &trans           &trans
+&kp F1            &kp F2           &kp F3           &kp F4           &kp F5           &kp F6             &kp F7           &kp F8        &kp F9        &kp F10      &kp F11 &kp F12
+&bt BT_CLR        &bt BT_SEL 0     &bt BT_SEL 1     &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4       &out OUT_TOG     &rgb_ug RGB_BRI &rgb_ug RGB_HUI &rgb_ug RGB_SAI &rgb_ug RGB_SPI &kp C_PP
+&ext_power EP_TOG &rgb_ug RGB_TOG  &rgb_ug RGB_EFF  &rgb_ug RGB_EFR  &rgb_ug RGB_BRD  &trans             &trans           &trans        &trans        &trans       &trans  &trans
+                                                    &trans           &trans           &trans             &trans           &trans        &trans
             >;
         };
     };
