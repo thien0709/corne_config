@@ -11,7 +11,7 @@
         <&pro_micro 14 GPIO_ACTIVE_HIGH>;
 };
 
-/* Cấu hình chân P0.06 (D1) cho SPI */
+/* CẤU HÌNH DRIVER PHẦN CỨNG SPI (Chân P0.06) */
 &pinctrl {
     spi3_default: spi3_default {
         group1 {
@@ -27,7 +27,6 @@
     };
 };
 
-/* Kích hoạt module SPI3 điều khiển LED */
 &spi3 {
     compatible = "nordic,nrf-spim";
     status = "okay";
@@ -40,19 +39,20 @@
         label = "WS2812";
         reg = <0>;
         spi-max-frequency = <4000000>;
-        
-        /* Tổng 27 LED (21 phím + 6 gầm) */
-        chain-length = <27>;
-        
+        chain-length = <27>; /* 21 Phím + 6 Gầm */
         spi-one-frame = <0x70>;
         spi-zero-frame = <0x40>;
         color-mapping = <LED_COLOR_ID_GREEN LED_COLOR_ID_RED LED_COLOR_ID_BLUE>;
     };
 };
 
-/* Trỏ node underglow về led_strip mới */
-/ {
-    chosen {
-        zmk,underglow = &led_strip;
-    };
+/* CẤU HÌNH LED ZMK (Đặt ở cuối file overlay là an toàn nhất) */
+&rgb_underglow {
+    compatible = "zmk,rgb-leds";
+    status = "okay";
+    default-brightness = <50>;
+    default-effect = <2>;
+    
+    /* Trỏ vào node led_strip vừa tạo ở trên */
+    led-nodes = <&led_strip>;
 };
