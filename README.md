@@ -2,7 +2,7 @@
 
 A highly optimized ZMK keymap configuration for Corne (crkbd) 3x6 split keyboard, designed specifically for developers and Vim users working with BSPWM window manager.
 
-[Corne_Image](https://github.com/thien0709/corne_config/blob/master/c50aa73b6f42e01cb953.jpg)
+[Image](https://github.com/thien0709/corne_config/blob/master/c50aa73b6f42e01cb953.jpg)
 
 ## ✨ Features
 
