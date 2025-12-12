@@ -10,24 +10,7 @@
     transform = <&default_transform>;
 };
 
-&pro_micro_i2c {
-    status = "okay";
-
-    oled: ssd1306@3c {
-        compatible = "solomon,ssd1306fb";
-        reg = <0x3c>;
-        width = <128>;
-        height = <32>;
-        segment-offset = <0>;
-        page-offset = <0>;
-        display-offset = <0>;
-        multiplex-ratio = <31>;
-        segment-remap;
-        com-invdir;
-        com-sequential;
-        prechargep = <0x22>;
-    };
-};
+/* --- ĐÃ XÓA ĐOẠN &pro_micro_i2c (OLED) ĐỂ NHƯỜNG CHO SHIELD NICE_OLED --- */
 
 &kscan0 {
     compatible = "zmk,kscan-gpio-matrix";
@@ -40,20 +23,14 @@
                 <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
 };
 
-&rgb_underglow {
-    compatible = "zmk,rgb-leds";
-    status = "okay";
-    default-brightness = <50>;
-    default-effect = <2>;
-    led-nodes = <&led_strip>;
-};
+/* --- ĐÃ XÓA ĐOẠN LED ĐỂ CHUYỂN SANG OVERLAY --- */
 
-/* ĐOẠN NÀY ĐÃ SỬA LẠI ĐÚNG CÚ PHÁP (Không còn dấu & và {}) */
+/* CHỈ GIỮ LẠI KSCAN VÀ LAYOUT TRONG CHOSEN */
 / {
     chosen {
-        zephyr,display = &oled;
         zmk,kscan = &kscan0;
         zmk,physical-layout = &foostan_corne_6col_layout;
+        /* Không khai báo zephyr,display ở đây nữa */
     };
 };
 
