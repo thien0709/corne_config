@@ -40,8 +40,15 @@
                 <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
 };
 
-/* ĐÃ XÓA ĐOẠN &rgb_underglow Ở ĐÂY ĐỂ TRÁNH LỖI */
+&rgb_underglow {
+    compatible = "zmk,rgb-leds";
+    status = "okay";
+    default-brightness = <50>;
+    default-effect = <2>;
+    led-nodes = <&led_strip>;
+};
 
+/* ĐOẠN NÀY ĐÃ SỬA LẠI ĐÚNG CÚ PHÁP (Không còn dấu & và {}) */
 / {
     chosen {
         zephyr,display = &oled;
