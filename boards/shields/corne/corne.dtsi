@@ -54,7 +54,7 @@
     default-saturation = <100>;
     default-effect = <2>;
 
-    led-nodes = <&led_left &led_right>;
+    led-nodes = <&led_strip>;
 };
 
 &{chosen} {

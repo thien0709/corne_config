@@ -10,13 +10,12 @@
         <&pro_micro 14 GPIO_ACTIVE_HIGH>;
 };
 
-&under {
+&led_strip {
     compatible = "zmk,ws2812-strip";
     label = "LED_STRIP";
-    gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>; // dùng đúng chân bạn đang hàn
-    chain-length = <54>;       // Tổng số LED trên cả 2 bên: 27 mỗi bên
-    split-index = <27>;        // LED bên trái = 27, bên phải cũng phải khai báo vậy để đồng bộ
-    color-order = <GRB>;       // Thử lại RGB nếu màu bị sai
+    gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>; 
+    chain-length = <27>;               
+    color-order = <GRB>;       
     status = "okay";
 };
 
